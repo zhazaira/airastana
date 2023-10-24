@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit subclass</title>
+</head>
+<body>
+    <h1>Edit subclass</h1>
+    <form method="post">
+        {% csrf_token %}
+         {{ form.name_code.label_tag }} {{ form.name_code }}
+        {{ form.name_description.label_tag}} {{ form.name_description}}
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>

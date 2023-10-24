@@ -1,0 +1,56 @@
+{% load static %}
+<h1>Subclass</h1>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet"  href="{% static 'style.css' %}">
+<script>
+    $(document).ready(function() {
+        $("#add-button").click(function() {
+            $("#add-form").toggle();
+        });
+    });
+</script>
+<button id="add-button">Add Subclass</button>
+<form method="post" id="add-form" style="display: none">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Subclass</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name code</th>
+            <th>Name description</th>
+            <th>Created by</th>
+            <th>Created Date</th>
+            <th>Modified By</th>
+            <th>Modified Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+     <tbody>
+        {% for subclass in subclass_data %}
+            <tr>
+                <td>{{ subclass.name_code }}</td>
+                <td>{{ subclass.name_description }}</td>
+                <td>{{ subclass.created_by }}</td>
+                <td>{{ subclass.created_date }}</td>
+                <td>{{ subclass.modified_by }}</td>
+                <td>{{ subclass.modified_date }}</td>
+                <td>
+                    <form action="{% url 'admin_module:edit_subclass' subclass.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="edit-subclass">Edit</button>
+                    </form>
+                    <form action="{% url 'admin_module:delete_subclass' subclass.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-subclass">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+

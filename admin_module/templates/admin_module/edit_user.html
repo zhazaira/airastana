@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактировать пользователя</title>
+</head>
+<body>
+    <h1>Редактировать пользователя: {{ user.username }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <a href="{% url 'admin_module:user_list' %}">Назад к списку пользователей</a>
+</body>
+</html>

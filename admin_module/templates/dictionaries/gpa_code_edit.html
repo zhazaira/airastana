@@ -1,0 +1,12 @@
+<h1>Edit GPA Code</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.gpa_code.label_tag }} {{ form.gpa_code }}
+    {{ form.description.label_tag }} {{ form.description }}
+    {{ form.gpa_full_name.label_tag }} {{ form.gpa_full_name }}
+    {{ form.oracle_code.label_tag }} {{ form.oracle_code }}
+    {{ form.currency.label_tag }} {{ form.currency }}
+    <button type="submit">Save</button>
+</form>
+

@@ -1,0 +1,33 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+  <h2>Список пользователей</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Login</th>
+        <th>Name</th>
+        <th>Roles</th>
+        <th>Status</th>
+        <!-- Другие поля, которые вы хотите отобразить -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.user.username }}</td>
+          <td>{{ user.user.first_name }} {{ user.user.last_name }}</td>
+          <td>{{ user.roles }}</td>
+          <td>{{ user.status }}</td>
+           <td>
+                    <a href="{% url 'admin_module:edit_user' user.user.id %}">Редактировать</a>
+                </td>
+          <!-- Отображение других полей модели UserProfile -->
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'admin_module:add_user' %}">Добавить пользователя</a> <br>
+{% endblock %}

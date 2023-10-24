@@ -1,0 +1,9 @@
+<h1>Removing the GPA Code</h1>
+
+<p>Are you sure you want to delete the gpa code "{{ gpa_code.gpa_code }}"?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confim deletion</button>
+    <a href="{% url 'admin_module:gpa_code' %}">Cancel</a>
+</form>

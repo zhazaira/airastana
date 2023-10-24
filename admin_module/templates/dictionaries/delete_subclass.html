@@ -1,0 +1,9 @@
+<h1>Removing the Subclass</h1>
+
+<p>Are you sure you want to delete the subclass? "{{ subclass.name_code }}"?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confim deletion</button>
+    <a href="{% url 'admin_module:subclass' %}">Cancel</a>
+</form>

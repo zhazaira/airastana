@@ -1,0 +1,12 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+  <h2>Добавление пользователя</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    {{ profile_form.as_p }}
+    <button type="submit">Создать пользователя</button>
+  </form>
+  <a href="{% url 'admin_module:user_list' %}">Назад к списку пользователей</a>
+{% endblock %}

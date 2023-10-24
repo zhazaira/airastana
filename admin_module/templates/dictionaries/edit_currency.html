@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Currency</title>
+</head>
+<body>
+    <h1>Edit Currency</h1>
+    <form method="post" action="{% url 'admin_module:edit_currency' currency.id %}">
+        {% csrf_token %}
+        <input type="text" name="code" value="{{ currency.code }}">
+        <input type="text" name="full_name" value="{{ currency.full_name }}">
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>

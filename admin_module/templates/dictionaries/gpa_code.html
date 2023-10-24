@@ -1,0 +1,61 @@
+{% load static %}
+<h1>GPA Code</h1>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <link rel="stylesheet"  href="{% static 'style.css' %}">
+<script>
+    $(document).ready(function() {
+        $("#add-button").click(function() {
+            $("#add-form").toggle();
+        });
+    });
+</script>
+<button id="add-button">Add GPA Code</button>
+<form method="post" id="add-form" style="display: none">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add GPA Code</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>GPA Code</th>
+            <th>Description</th>
+            <th>GPA_full_name</th>
+            <th>Oracle_code</th>
+            <th>CREATED_BY</th>
+            <th>Currency</th>
+            <th>Created Date</th>
+            <th>Modified By</th>
+            <th>Modified Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for gpa_code in gpa_code_data %}
+            <tr>
+                <td>{{ gpa_code.gpa_code }}</td>
+                <td>{{ gpa_code.description }}</td>
+                <td>{{ gpa_code.gpa_full_name }}</td>
+                <td>{{ gpa_code.oracle_code }}</td>
+                <td>{{ gpa_code.created_by }}</td>
+                <td>{{ gpa_code.currency }}</td>
+                <td>{{ gpa_code.created_date }}</td>
+                <td>{{ gpa_code.modified_by }}</td>
+                <td>{{ gpa_code.modified_date }}</td>
+                <td>
+                    <form action="{% url 'admin_module:edit_gpa_code' gpa_code.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="edit-gpa-code">Edit</button>
+                    </form>
+                    <form action="{% url 'admin_module:delete_gpa_code' gpa_code.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-gpa-code">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+

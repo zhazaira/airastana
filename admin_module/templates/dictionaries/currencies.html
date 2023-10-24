@@ -1,0 +1,62 @@
+{% load static %}
+<html>
+<head>
+    <title>Currencies</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet"  href="{% static 'style.css' %}">
+    <script>
+            $(document).ready(function() {
+        $("#add-button").click(function() {
+            $("#add-form").toggle();
+        });
+    });
+    </script>
+<body>
+    <h1>Currencies</h1>
+    <button id="add-button">Add</button>
+    <form method="post" id="add-form" style="display: none;">
+        {% csrf_token %}
+        <input type="text" name="new_code" placeholder="Сокращенное название валюты">
+        <input type="text" name="full_name" placeholder="Полное название валюты">
+        <button type="submit">Add currency</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Short Name</th>
+                <th>Full Name</th>
+                <th>Created by</th>
+                <th>Created date</th>
+                <th>Modified by</th>
+                <th>Modified date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for currency in currencies_data %}
+                <tr>
+                    <td>{{ currency.code }}</td>
+                    <td>{{ currency.full_name }}</td>
+                    <td>{{ currency.created_by }}</td>
+                    <td>{{ currency.created_date }}</td>
+                    <td>{{ currency.modified_by }}</td>
+                    <td>{{ currency.modified_date }}</td>
+                    <td>
+                        <form action="{% url 'admin_module:edit_currency' currency.id %}" >
+                            {% csrf_token %}
+                            <button type="submit" class="edit-currency">Edit</button>
+                        </form>
+                        <form action="{% url 'admin_module:delete_currency' currency.id %}" >
+                            {% csrf_token %}
+                            <button type="submit" class="delete-currency">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    
+</body>
+</html>

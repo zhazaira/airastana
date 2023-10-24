@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Removing the  Currency</title>
+</head>
+<body>
+    <h1>Removing the  Currency</h1>
+    <p>Are you sure you want to delete the currency? "{{ currency.full_name }}"?</p>
+    <form method="post" action="{% url 'admin_module:delete_currency' currency.id %}">
+        {% csrf_token %}
+        <input type="submit" value="Confim deletion">
+        <a href="{% url 'admin_module:currencies' %}">Cancel</a>
+    </form>
+</body>
+</html>

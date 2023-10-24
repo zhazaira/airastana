@@ -1,0 +1,125 @@
+
+<html>
+<head>
+    <title>Exchange Rate</title>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $('.delete-exchange-rate').on('click', function () {
+            var exchangeRateId = $(this).data('exchange-rate-id');
+
+
+            if (confirm('Are you sure you want to delete this exchange rate?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/delete_exchange_rate/' + exchangeRateId + '/',
+                    data: {
+                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success: function (data) {
+                        if (data.success) {
+
+
+                            location.reload();
+                        } else {
+                            alert('Error: ' + data.error);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <thead>
+        <tr>
+    <th>Currency 1</th>
+    <th>Currency 2</th>
+    <th>Value</th>
+    <th>Created By (Username)</th>
+    <th>Modified By (Username)</th>
+    <th>Creation Date</th>
+    <th>Modification Date</th>
+    <th>Actions</th>
+</tr>
+
+    </thead>
+    <tbody>
+        {% for exchange_rate in exchange_rates_data %}
+            <tr>
+                <td>{{ exchange_rate.rate_1.full_name }}</td>
+                <td>{{ exchange_rate.rate_2.full_name }}</td>
+                <td>{{ exchange_rate.value }}</td>
+                <td>{{ exchange_rate.created_by }}</td>
+                <td>{{ exchange_rate.modified_by }}</td>
+                <td>{{ exchange_rate.created_date }}</td>
+                <td>{{ exchange_rate.modified_date }}</td>
+                <td>
+                    <button class="delete-exchange-rate" data-exchange-rate-id="{{ exchange_rate.id }}">Delete</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" id="add-exchange-rates">Добавить курс обмена</button>
+
+</form>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ upload_form.as_p }}
+    <button type="submit">Загрузить Excel файл</button>
+</form>
+</body>

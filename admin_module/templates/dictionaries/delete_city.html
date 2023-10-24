@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Removing the City</title>
+</head>
+<body>
+    <h1>Removing the City</h1>
+    <p>Are you sure you want to delete the city? "{{ city.city_name }}"?</p>
+    <form method="post" action="{% url 'admin_module:delete_city' city.id %}">
+        {% csrf_token %}
+        <input type="submit" value="Confirm deletion">
+    </form>
+</body>
+</html>

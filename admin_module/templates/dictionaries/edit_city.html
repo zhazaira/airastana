@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit city</title>
+</head>
+<body>
+    <h1>Edit city</h1>
+    <form method="post" action="{% url 'admin_module:edit_city' city.id %}">
+        {% csrf_token %}
+        <input type="text" name="city_code" value="{{ city.city_code }}">
+        <input type="text" name="city_name" value="{{ city.city_name }}">
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>

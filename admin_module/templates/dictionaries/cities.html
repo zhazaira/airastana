@@ -1,0 +1,69 @@
+{% load static %}
+<h1>Cities</h1>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet"  href="{% static 'style.css' %}">
+<script>
+    $(document).ready(function() {
+        $("#add-button").click(function() {
+            $("#add-form").toggle();
+        });
+    });
+</script>
+
+<button id="add-button">Add</button>
+    <form method="post" id="add-form" style="display: none;">
+        {% csrf_token %}
+        <input type="text" name="city_code" placeholder="Код города">
+        <input type="text" name="city_name" placeholder="Название города">
+        <button type="submit">Add city</button>
+    </form>
+
+<table>
+    <thead>
+        <tr>
+            <th>City Code</th>
+            <th>City Name</th>
+            <th>Created By</th>
+            <th>Created Date</th>
+            <th>Modified By</th>
+            <th>Modified Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for city in cities_data %}
+           <tr data-city-id="{{ city.id }}">
+    <td><span class="city-code"></span>{{ city.city_code }}</td>
+    <td><span class="city-name">{{ city.city_name }}</span></td>
+    <td>{{ city.created_by }}</td>
+    <td>{{ city.created_date }}</td>
+    <td>{{ city.modified_by }}</td>
+    <td>{{ city.modified_date }}</td>
+    <td>
+        <form action="{% url 'admin_module:edit_city' city.id %}" >
+            {% csrf_token %}
+            <button type="submit" class="edit-city">Edit</button>
+        </form>
+        
+        <form action="{% url 'admin_module:delete_city' city.id %}" >
+            {% csrf_token %}
+            <button type="submit" class="delete-city">Delete</button>
+        </form>
+    </td>
+</tr>
+
+        {% endfor %}
+    </tbody>
+</table>
+
+<form id="add-city-form" style="display: none;">
+    {% csrf_token %}
+    <input type="text" name="city_code" placeholder="City Code">
+    <input type="text" name="city_name" placeholder="City Name">
+    <input type="text" name="created_by" placeholder="Created By">
+    <input type="text" name="created_date" placeholder="Created Date">
+    <input type="text" name="modified_by" placeholder="Modified By">
+    <input type="text" name="modified_date" placeholder="Modified Date">
+    <button id="save-city-button">Save</button>
+</form>
+
