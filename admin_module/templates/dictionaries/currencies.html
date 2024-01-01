@@ -1,24 +1,64 @@
 {% load static %}
+<!DOCTYPE html>
 <html>
 <head>
     <title>Currencies</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet"  href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     <script>
-            $(document).ready(function() {
-        $("#add-button").click(function() {
-            $("#add-form").toggle();
+        $(document).ready(function(){
+            $("#add-button").click(function() {
+                console.log("Button is clicked!");
+                $("#add-form").toggle();
+            });
+
+        
+            function performSearch() {
+                var searchQuery = $("#search-currency").val().trim().toLowerCase();
+
+
+                $("tbody tr").each(function() {
+                    var shortName = $(this).find("td:first").text().trim().toLowerCase();
+
+                    if (shortName.includes(searchQuery)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+
+
+            $("#search-button").click(function() {
+                performSearch();
+            });
+
+
+            $("#search-currency").on("input", function() {
+                performSearch();
+            });
         });
-    });
     </script>
+</head>
 <body>
+    <a href="{% url 'admin_module:dictionaries' %}">Back</a>
     <h1>Currencies</h1>
+
+
+    <div class="search-box">
+        <input type="text" id="search-currency" placeholder="Search Short Name">
+        <button id="search-button">Search</button>
+    </div>
+
+
     <button id="add-button">Add</button>
+
+
     <form method="post" id="add-form" style="display: none;">
         {% csrf_token %}
-        <input type="text" name="new_code" placeholder="Сокращенное название валюты">
-        <input type="text" name="full_name" placeholder="Полное название валюты">
-        <button type="submit">Add currency</button>
+        <input type="text" name="code" placeholder="Short Name">
+        <input type="text" name="full_name" placeholder="Full Name">
+        <button type="submit" name="submit">Add Currency</button>
     </form>
 
     <table>
@@ -34,6 +74,7 @@
             </tr>
         </thead>
         <tbody>
+
             {% for currency in currencies_data %}
                 <tr>
                     <td>{{ currency.code }}</td>
@@ -43,11 +84,14 @@
                     <td>{{ currency.modified_by }}</td>
                     <td>{{ currency.modified_date }}</td>
                     <td>
-                        <form action="{% url 'admin_module:edit_currency' currency.id %}" >
+                    
+                        <form action="{% url 'admin_module:edit_currency' currency.id %}">
                             {% csrf_token %}
                             <button type="submit" class="edit-currency">Edit</button>
                         </form>
-                        <form action="{% url 'admin_module:delete_currency' currency.id %}" >
+
+          
+                        <form action="{% url 'admin_module:delete_currency' currency.id %}">
                             {% csrf_token %}
                             <button type="submit" class="delete-currency">Delete</button>
                         </form>
@@ -56,7 +100,5 @@
             {% endfor %}
         </tbody>
     </table>
-
-    
 </body>
 </html>

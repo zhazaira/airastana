@@ -1,2 +1,25 @@
+{% load static %}
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <h1>Welcome to Main page</h1>
 
+    <button id="login-button">Login</button>
+    
+
+    <script>
+        $(document).ready(function() {
+            // Redirect to the authentication page when the "Login" button is clicked
+            $("#login-button").click(function() {
+                window.location.href = "/login/";
+            });
+        });
+    </script>
+</body>
+</html>

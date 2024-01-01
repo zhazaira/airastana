@@ -1,69 +1,131 @@
 {% load static %}
-<h1>Cities</h1>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet"  href="{% static 'style.css' %}">
-<script>
-    $(document).ready(function() {
-        $("#add-button").click(function() {
-            $("#add-form").toggle();
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cities</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+    <script>
+        $(document).ready(function() {
+            console.log("Document ready.");
+    
+            function performSearch() {
+                var searchQuery = $("#search-city").val().trim().toLowerCase();
+    
+                $(".city-code").each(function() {
+                    var cityCode = $(this).text().trim().toLowerCase();
+                    var row = $(this).closest("tr");
+    
+                    if (cityCode.includes(searchQuery)) {
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                });
+            }
+    
+            $("#add-city-button").click(function() {
+                console.log("Add button clicked.");
+                $("#add-city-form").toggle();
+            });
+    
+            $("#search-button").click(function() {
+                performSearch();
+            });
+    
+            $("#search-city").on("input", function() {
+                performSearch();
+            });
         });
-    });
-</script>
+    </script>
+     <script>
+        $(document).ready(function() {
+            console.log("Страница загружена.");
 
-<button id="add-button">Add</button>
-    <form method="post" id="add-form" style="display: none;">
+            $("#add-rate-button").click(function() {
+                console.log("Кнопка 'Добавить' нажата.");
+                $("#add-rate-form").toggle();
+            });
+
+            $("#import-excel-button").click(function() {
+                $("#file-input").click();
+            });
+
+            $("#file-input").change(function(e) {
+                var file = e.target.files[0];
+                var formData = new FormData();
+                formData.append('excel_file', file);
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'admin_module:upload_excel_cities' %}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Произошла ошибка при загрузке данных из Excel:", error);
+                    }
+                });
+            });
+        });
+    </script>
+<body>
+    <a href="{% url 'admin_module:dictionaries' %}">Back</a>
+    <h1>Cities</h1>    
+    <button id="add-city-button">Add</button>
+    <form method="post" id="add-city-form" style="display: none;">
         {% csrf_token %}
-        <input type="text" name="city_code" placeholder="Код города">
-        <input type="text" name="city_name" placeholder="Название города">
-        <button type="submit">Add city</button>
+        <input type="text" name="city_code" placeholder="City Code">
+        <input type="text" name="city_name" placeholder="City Name">
+        <button type="submit">Add City</button>
     </form>
+    <input type="text" id="search-city" placeholder="Enter City Code">
+<button id="search-button">Search</button>
 
-<table>
-    <thead>
-        <tr>
-            <th>City Code</th>
-            <th>City Name</th>
-            <th>Created By</th>
-            <th>Created Date</th>
-            <th>Modified By</th>
-            <th>Modified Date</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for city in cities_data %}
-           <tr data-city-id="{{ city.id }}">
-    <td><span class="city-code"></span>{{ city.city_code }}</td>
-    <td><span class="city-name">{{ city.city_name }}</span></td>
-    <td>{{ city.created_by }}</td>
-    <td>{{ city.created_date }}</td>
-    <td>{{ city.modified_by }}</td>
-    <td>{{ city.modified_date }}</td>
-    <td>
-        <form action="{% url 'admin_module:edit_city' city.id %}" >
-            {% csrf_token %}
-            <button type="submit" class="edit-city">Edit</button>
-        </form>
-        
-        <form action="{% url 'admin_module:delete_city' city.id %}" >
-            {% csrf_token %}
-            <button type="submit" class="delete-city">Delete</button>
-        </form>
-    </td>
-</tr>
-
-        {% endfor %}
-    </tbody>
-</table>
-
-<form id="add-city-form" style="display: none;">
+<button id="import-excel-button">Import Excel Data</button>
+<form method="post" style="display: none;">
     {% csrf_token %}
-    <input type="text" name="city_code" placeholder="City Code">
-    <input type="text" name="city_name" placeholder="City Name">
-    <input type="text" name="created_by" placeholder="Created By">
-    <input type="text" name="created_date" placeholder="Created Date">
-    <input type="text" name="modified_by" placeholder="Modified By">
-    <input type="text" name="modified_date" placeholder="Modified Date">
-    <button id="save-city-button">Save</button>
+    <input type="file" id="file-input" hidden>
 </form>
-
+    <table>
+        <thead>
+            <tr>
+                <th>City Code</th>
+                <th>City Name</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Modified By</th>
+                <th>Modified Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for city in cities_data %}
+                <tr data-city-id="{{ city.id }}">
+                    <td><span class="city-code">{{ city.city_code }}</span></td>
+                    <td><span class="city-name">{{ city.city_name }}</span></td>
+                    <td>{{ city.created_by }}</td>
+                    <td>{{ city.created_date }}</td>
+                    <td>{{ city.modified_by }}</td>
+                    <td>{{ city.modified_date }}</td>
+                    <td>
+                        <form action="{% url 'admin_module:edit_city' city.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="edit-city">Edit</button>
+                        </form>
+                        <form action="{% url 'admin_module:delete_city' city.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-city">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

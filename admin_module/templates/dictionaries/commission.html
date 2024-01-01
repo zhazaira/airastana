@@ -1,0 +1,103 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Commission</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+    <script>
+        $(document).ready(function() {
+            console.log("Document ready.");
+    
+            // Function to perform the search
+            function performSearch() {
+                var searchQuery = $("#search-gpa").val().trim().toLowerCase();
+    
+                // Loop through each row and hide/show based on the search query
+                $(".gpa-cell").each(function() {
+                    var gpa = $(this).text().trim().toLowerCase();
+                    var row = $(this).closest("tr");
+    
+                    if (gpa.includes(searchQuery)) {
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                });
+            }
+    
+            $("#search-button").click(function() {
+                performSearch();
+            });
+    
+            $("#search-gpa").on("input", function() {
+                performSearch();
+            });
+
+            $("#toggle-form").click(function() {
+                console.log("Toggle form clicked.");
+                $("#add-form").toggle();
+            });
+        });
+    </script>
+<body>
+    <a href="{% url 'admin_module:dictionaries' %}">Back</a>
+    <h1>Commission</h1>
+    <div class="add-commission-form">
+        <div class="search-box">
+            <input type="text" name="search-gpa" id="search-gpa" placeholder="Search GPA" class="search-input">
+            <button type="button" id="search-button">Search</button>
+        </div>
+        <button id="toggle-form">Add</button>
+        <form method="post" id="add-form" style="display: none;">
+            {% csrf_token %}
+            <select name="gpa">
+                {% for gpa_code in gpa_code %}
+                    <option value="{{ gpa_code.id }}">{{ gpa_code.gpa_code }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="value" placeholder="Value" class="value-input">
+            <button type="submit" class="submit-button">Add Commission</button>
+        </form>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>GPA ID</th>
+                <th>Commission value</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Modified By</th>
+                <th>Modified Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commission in commission_data %}
+            <tr>
+                    <td class="gpa-cell">{{ commission.gpa }}</td>
+                    <td class="value-cell">{{ commission.value|floatformat:0 }}</td>
+                    <td>{{ commission.created_by }}</td>
+                    <td>{{ commission.created_date }}</td>
+                    <td>{{ commission.modified_by }}</td>
+                    <td>{{ commission.modified_date }}</td>
+                    <td>
+                        <form action="{% url 'admin_module:edit_commission' commission.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="edit-commission-button">Edit</button>
+                        </form>
+                    
+                        <form action="{% url 'admin_module:delete_commission' commission.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-commission-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

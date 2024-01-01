@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>KZD Rates</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.8/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            console.log("Страница загружена.");
+
+            $("#add-rate-button").click(function() {
+                console.log("Кнопка 'Добавить' нажата.");
+                $("#add-rate-form").toggle();
+            });
+
+            $("#import-excel-button").click(function() {
+                $("#file-input").click();
+            });
+
+            $("#file-input").change(function(e) {
+                var file = e.target.files[0];
+                var formData = new FormData();
+                formData.append('excel_file', file);
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'admin_module:upload_excel' %}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Произошла ошибка при загрузке данных из Excel:", error);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <a href="{% url 'admin_module:dictionaries' %}">Back</a>
+    <h1>KZD Rates</h1>
+
+    <button id="add-rate-button">Add</button>
+    <form method="post" id="add-rate-form" style="display: none;">
+        {% csrf_token %}
+        <select name="city_1">
+            {% for city in cities %}
+                <option value="{{ city.id }}">{{ city.city_name }}</option>
+            {% endfor %}
+        </select>
+        <select name="city_2">
+            {% for city in cities %}
+                <option value="{{ city.id }}">{{ city.city_name }}</option>
+            {% endfor %}
+        </select>
+        <input type="date" name="date_begin" placeholder="Date Begin">
+        <input type="date" name="date_end" placeholder="Date End">
+        <input type="text" name="rate_po" placeholder="Rate PO">
+        <input type="text" name="rate_nw" placeholder="Rate NW">
+        <input type="text" name="rate_ems" placeholder="Rate EMS">
+        <button type="submit">Add KZD Rate</button>
+    </form>
+    
+
+    <button id="import-excel-button">Import Excel Data</button>
+    <form method="post" style="display: none;">
+        {% csrf_token %}
+        <input type="file" id="file-input" hidden>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>City 1</th>
+                <th>City 2</th>
+                <th>Date Begin</th>
+                <th>Date End</th>
+                <th>Rate PO</th>
+                <th>Rate NW</th>
+                <th>Rate EMS</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Modified By</th>
+                <th>Modified Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for kzd_rates in kzd_rate_data %}
+                <tr>
+                    <td>{{ kzd_rates.city_1.city_name }}</td>
+                    <td>{{ kzd_rates.city_2.city_name }}</td>
+                    <td>{{ kzd_rates.date_begin }}</td>
+                    <td>{{ kzd_rates.date_end }}</td>
+                    <td>{{ kzd_rates.rate_po|floatformat:0 }}</td>
+                    <td>{{ kzd_rates.rate_nw|floatformat:0 }}</td>
+                    <td>{{ kzd_rates.rate_ems|floatformat:0 }}</td>
+                    <td>{{ kzd_rates.created_by }}</td>
+                    <td>{{ kzd_rates.created_date }}</td>
+                    <td>{{ kzd_rates.modified_by }}</td>
+                    <td>{{ kzd_rates.modified_date }}</td>
+                    <td>
+                        <form action="{% url 'admin_module:edit_kzd_rate' kzd_rates.id %}" >
+                            {% csrf_token %}
+                            <button type="submit" class="edit-kzd-rate">Edit</button>
+                        </form>
+                        <form action="{% url 'admin_module:delete_kzd_rate' kzd_rates.id %}" >
+                            {% csrf_token %}
+                            <button type="submit" class="delete-kzd-rate">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

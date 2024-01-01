@@ -1,34 +1,40 @@
+<a href="{% url 'admin_module:main' %}">Back</a>
 <h1>Dictionaries</h1>
 
 <ul>
     <li><a href="{% url 'admin_module:cities' %}">Cities</a></li>
-    <li><a href="{% url 'admin_module:currencies' %}">Currencies</a></li>
+    <li><a href="{% url 'admin_module:currencies' %}">Currency</a></li>
     <li><a href="{% url 'admin_module:exchange_rates' %}">Exchange Rates</a></li>
     <li><a href="{% url 'admin_module:gpa_code' %}">GPA Code</a></li>
     <li><a href="{% url 'admin_module:subclass' %}">Subclass</a></li>
+    <li><a href="{% url 'admin_module:sdr_rates' %}">SDR Rates</a></li>
+    <li><a href="{% url 'admin_module:kzd_rates' %}">KZD Rates</a></li>
+    <li><a href="{% url 'admin_module:commission' %}">Commission</a></li>
+    <li><a href="{% url 'admin_module:oi_rates' %}">OI Rates</a></li>
+
 </ul>
 <style>
 h1 {
     text-align: center;
-    font-size: 24px;  /* Размер шрифта для заголовка */
-    margin: 20px 0;   /* Отступы сверху и снизу */
+    font-size: 24px; 
+    margin: 20px 0;   
 }
 
 ul {
-    list-style: none; /* Убирает маркеры списка (bullets) */
-    padding: 0;       /* Убирает отступы внутри списка */
+    list-style: none; 
+    padding: 0;       
 }
 
 li {
-    margin-bottom: 10px;  /* Отступ между элементами списка */
+    margin-bottom: 10px;  
 }
 
 a {
-    text-decoration: none;  /* Убирает подчеркивание ссылок */
-    color: #007BFF;        /* Цвет текста ссылок */
+    text-decoration: none;  
+    color: #007BFF;      
 }
 
 a:hover {
-    color: #0056b3;  /* Цвет текста ссылок при наведении */
+    color: #0056b3;  
 }
 </style>

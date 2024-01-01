@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Sdr Rates</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.8/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            console.log("Страница загружена.");
+
+            $("#add-rate-button").click(function() {
+                console.log("Кнопка 'Добавить' нажата.");
+                $("#add-rate-form").toggle();
+            });
+
+            $("#import-excel-button").click(function() {
+                $("#file-input").click();
+            });
+
+            $("#file-input").change(function(e) {
+                var file = e.target.files[0];
+                var formData = new FormData();
+                formData.append('excel_file', file);
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'admin_module:upload_excel_sdr' %}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Произошла ошибка при загрузке данных из Excel:", error);
+                    }
+                });
+            });
+        });
+    </script>
+    <a href="{% url 'admin_module:dictionaries' %}">Back</a>
+    <h1>Sdr Rates</h1>
+
+    <button id="add-rate-button" onclick="toggleForm()">Add</button>
+
+    <form method="post" id="add-rate-form">
+        {% csrf_token %}
+        <select name="city_1">
+            {% for city in cities %}
+                <option value="{{ city.id }}">{{ city.city_name }}</option>
+            {% endfor %}
+        </select>
+        <select name="city_2">
+            {% for city in cities %}
+                <option value="{{ city.id }}">{{ city.city_name }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="rate" placeholder="Rate">
+        <input type="date" name="date_begin" placeholder="Date Begin">
+        <input type="date" name="date_end" placeholder="Date End">
+        <button type="submit">Add Sdr Rate</button>
+    </form>
+    <button id="import-excel-button">Import Excel Data</button>
+    <form method="post" style="display: none;">
+        {% csrf_token %}
+        <input type="file" id="file-input" hidden>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>City 1</th>
+                <th>City 2</th>
+                <th>Rate</th>
+                <th>Date Begin</th>
+                <th>Date End</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Modified By</th>
+                <th>Modified Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sdr_rates in sdr_rates_data %}
+                <tr>
+                    <td>{{ sdr_rates.city_1.city_name }}</td>
+                    <td>{{ sdr_rates.city_2.city_name }}</td>
+                    <td>{{ sdr_rates.rate }}</td>
+                    <td>{{ sdr_rates.date_begin }}</td>
+                    <td>{{ sdr_rates.date_end }}</td>
+                    <td>{{ sdr_rates.created_by }}</td>
+                    <td>{{ sdr_rates.created_date }}</td>
+                    <td>{{ sdr_rates.modified_by }}</td>
+                    <td>{{ sdr_rates.modified_date }}</td>
+                    <td>
+                        <form action="{% url 'admin_module:edit_sdr_rates' sdr_rates.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="edit-sdr-rates">Edit</button>
+                        </form>
+                        <form action="{% url 'admin_module:delete_sdr_rates' sdr_rates.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-sdr-rates">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function toggleForm() {
+            var form = document.getElementById("add-rate-form");
+            form.style.display = (form.style.display === "none") ? "block" : "none";
+        }
+    </script>
+
+</body>
+</html>

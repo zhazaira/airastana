@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reports</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+<body>
+    <ul>
+        <li><a href="{% url 'admin_module:report_cn51' %}">CN51</a></li>
+
+    
+    </ul>
+    <style>
+    h1 {
+        text-align: center;
+        font-size: 24px; 
+        margin: 20px 0;   
+    }
+    
+    ul {
+        list-style: none; 
+        padding: 0;       
+    }
+    
+    li {
+        margin-bottom: 10px;  
+    }
+    
+    a {
+        text-decoration: none;  
+        color: #007BFF;      
+    }
+    
+    a:hover {
+        color: #0056b3;  
+    }
+    </style>
+</body>
+
+</html>

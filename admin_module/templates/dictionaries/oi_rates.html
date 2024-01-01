@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>OI Rates</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <a href="{% url 'admin_module:dictionaries' %}">Back</a>
+    <h1>OI Rates</h1>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            console.log("Document ready.");
+            $("#add-rate-button").click(function() {
+                console.log("Add button clicked.");
+                $("#add-rate-form").toggle();
+        });
+
+
+            $("#add-rate-form").submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'admin_module:oi_rates' %}", 
+                    data: $("#add-rate-form").serialize(), 
+                    success: function(response) {
+                     
+                        location.reload();  
+                    }
+                });
+            });
+        });
+    </script>
+
+    <button id="add-rate-button">Add</button>
+
+    <form method="post" id="add-rate-form" style="display: none;">
+        {% csrf_token %}
+        <select name="city_1">
+            {% for city in cities %}
+                <option value="{{ city.id }}">{{ city.city_name }}</option>
+            {% endfor %}
+        </select>
+        <select name="city_2">
+            {% for city in cities %}
+                <option value="{{ city.id }}">{{ city.city_name }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="gpa_id" placeholder="GPA ID">
+        <input type="text" name="rate" placeholder="Rate">
+        <input type="date" name="date_begin" placeholder="Date Begin">
+        <input type="date" name="date_end" placeholder="Date End">
+        <button type="submit">Add OI Rate</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>City 1</th>
+                <th>City 2</th>
+                <th>GPA ID</th>
+                <th>Rate</th>
+                <th>Date Begin</th>
+                <th>Date End</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Modified By</th>
+                <th>Modified Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for oi_rates in oi_rates_data %}
+                <tr>
+                    <td>{{ oi_rates.city_1.city_name }}</td>
+                    <td>{{ oi_rates.city_2.city_name }}</td>
+                    <td>{{ oi_rates.gpa_id }}</td>
+                    <td>{{ oi_rates.rate|floatformat:0 }}</td>
+                    <td>{{ oi_rates.date_begin }}</td>
+                    <td>{{ oi_rates.date_end }}</td>
+                    <td>{{ oi_rates.created_by }}</td>
+                    <td>{{ oi_rates.created_date }}</td>
+                    <td>{{ oi_rates.modified_by }}</td>
+                    <td>{{ oi_rates.modified_date }}</td>
+                    <td>
+                        <form action="{% url 'admin_module:edit_oi_rates' oi_rates.id %}" >
+                            {% csrf_token %}
+                            <button type="submit" class="edit-oi-rates">Edit</button>
+                        </form>
+                        <form action="{% url 'admin_module:delete_oi_rates' oi_rates.id %}" >
+                            {% csrf_token %}
+                            <button type="submit" class="delete-oi-rates">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

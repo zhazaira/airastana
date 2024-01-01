@@ -1,0 +1,9 @@
+<h1>Removing the OI Rate</h1>
+
+<p>Are you sure you want to delete the kzd_rate? "{{ oi_rates.rate|floatformat:0 }}"?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confim deletion</button>
+    <a href="{% url 'admin_module:oi_rates' %}">Cancel</a>
+</form>

@@ -1,61 +1,100 @@
 {% load static %}
-<h1>GPA Code</h1>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- <link rel="stylesheet"  href="{% static 'style.css' %}">
-<script>
-    $(document).ready(function() {
-        $("#add-button").click(function() {
-            $("#add-form").toggle();
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPA Code</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script>
+        $(document).ready(function() {
+            $("#add-button").click(function() {
+                $("#add-form").toggle();
+            });
+
+         
+            function performSearch() {
+                var searchQuery = $("#search-gpa-code").val().trim().toLowerCase();
+
+     
+                $("tbody tr").each(function() {
+                    var gpaCode = $(this).find("td:first").text().trim().toLowerCase();
+
+                    if (gpaCode.includes(searchQuery)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+
+    
+            $("#search-button").click(function() {
+                performSearch();
+            });
+
+   
+            $("#search-gpa-code").on("input", function() {
+                performSearch();
+            });
         });
-    });
-</script>
-<button id="add-button">Add GPA Code</button>
-<form method="post" id="add-form" style="display: none">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add GPA Code</button>
-</form>
+    </script>
+</head>
+<body>
+    <a href="{% url 'admin_module:dictionaries' %}">Back</a>
+    <h1>GPA Code</h1>
+    <button id="add-button">Add GPA Code</button>
+    <form method="post" id="add-form" style="display: none">
+        {% csrf_token %}
+        {{ form.as_p }} 
+        <button type="submit">Add GPA Code</button>
+    </form>
 
-<table>
-    <thead>
-        <tr>
-            <th>GPA Code</th>
-            <th>Description</th>
-            <th>GPA_full_name</th>
-            <th>Oracle_code</th>
-            <th>CREATED_BY</th>
-            <th>Currency</th>
-            <th>Created Date</th>
-            <th>Modified By</th>
-            <th>Modified Date</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for gpa_code in gpa_code_data %}
+
+    <div class="search-box">
+        <input type="text" id="search-gpa-code" placeholder="Search GPA Code">
+        <button id="search-button">Search</button>
+    </div>
+
+    <table>
+        <thead>
             <tr>
-                <td>{{ gpa_code.gpa_code }}</td>
-                <td>{{ gpa_code.description }}</td>
-                <td>{{ gpa_code.gpa_full_name }}</td>
-                <td>{{ gpa_code.oracle_code }}</td>
-                <td>{{ gpa_code.created_by }}</td>
-                <td>{{ gpa_code.currency }}</td>
-                <td>{{ gpa_code.created_date }}</td>
-                <td>{{ gpa_code.modified_by }}</td>
-                <td>{{ gpa_code.modified_date }}</td>
-                <td>
-                    <form action="{% url 'admin_module:edit_gpa_code' gpa_code.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="edit-gpa-code">Edit</button>
-                    </form>
-                    <form action="{% url 'admin_module:delete_gpa_code' gpa_code.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-gpa-code">Delete</button>
-                    </form>
-                </td>
+                <th>GPA Code</th>
+                <th>Description</th>
+                <th>GPA Full Name</th>
+                <th>Oracle Code</th>
+                <th>CREATED_BY</th>
+                <th>Currency</th>
+                <th>Created Date</th>
+                <th>Modified By</th>
+                <th>Modified Date</th>
+                <th>Action</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-
+        </thead>
+        <tbody>
+            {% for gpa_code in gpa_code_data %}
+                <tr>
+                    <td>{{ gpa_code.gpa_code }}</td>
+                    <td>{{ gpa_code.description }}</td>
+                    <td>{{ gpa_code.gpa_full_name }}</td>
+                    <td>{{ gpa_code.oracle_code }}</td>
+                    <td>{{ gpa_code.created_by }}</td>
+                    <td>{{ gpa_code.currency }}</td>
+                    <td>{{ gpa_code.created_date }}</td>
+                    <td>{{ gpa_code.modified_by }}</td>
+                    <td>{{ gpa_code.modified_date }}</td>
+                    <td>
+                        <form action="{% url 'admin_module:edit_gpa_code' gpa_code.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="edit-gpa-code">Edit</button>
+                        </form>
+                        <form action="{% url 'admin_module:delete_gpa_code' gpa_code.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-gpa-code">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

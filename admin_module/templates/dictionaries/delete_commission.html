@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Removing the City</title>
+</head>
+<body>
+    <h1>Removing the Commission</h1>
+    <p>Are you sure you want to delete the commission? "{{ commission.gpa }}"?</p>
+    <form method="post" action="{% url 'admin_module:delete_commission' commission.id %}">
+        {% csrf_token %}
+        <input type="submit" value="Confirm deletion">
+        <a href="{% url 'admin_module:commission' %}">Cancel</a>
+    </form>
+</body>
+</html>

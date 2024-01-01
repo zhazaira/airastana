@@ -1,56 +1,94 @@
 {% load static %}
-<h1>Subclass</h1>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet"  href="{% static 'style.css' %}">
-<script>
-    $(document).ready(function() {
-        $("#add-button").click(function() {
-            $("#add-form").toggle();
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subclass</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script>
+        $(document).ready(function() {
+            $("#add-button").click(function() {
+                $("#add-form").toggle();
+            });
+
+        
+            function performSearch() {
+                var searchQuery = $("#search-name-code").val().trim().toLowerCase();
+
+               
+                $("tbody tr").each(function() {
+                    var nameCode = $(this).find("td:first").text().trim().toLowerCase();
+
+                    if (nameCode.includes(searchQuery)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+
+       
+            $("#search-button").click(function() {
+                performSearch();
+            });
+
+          
+            $("#search-name-code").on("input", function() {
+                performSearch();
+            });
         });
-    });
-</script>
-<button id="add-button">Add Subclass</button>
-<form method="post" id="add-form" style="display: none">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Subclass</button>
-</form>
+    </script>
+</head>
+<body>
+    <a href="{% url 'admin_module:dictionaries' %}">Back</a>
+    <h1>Subclass</h1>
+    <button id="add-button">Add Subclass</button>
+    <form method="post" id="add-form" style="display: none">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Subclass</button>
+    </form>
 
-<table>
-    <thead>
-        <tr>
-            <th>Name code</th>
-            <th>Name description</th>
-            <th>Created by</th>
-            <th>Created Date</th>
-            <th>Modified By</th>
-            <th>Modified Date</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-     <tbody>
-        {% for subclass in subclass_data %}
+
+    <div class="search-box">
+        <input type="text" id="search-name-code" placeholder="Search Name Code">
+        <button id="search-button">Search</button>
+    </div>
+
+    <table>
+        <thead>
             <tr>
-                <td>{{ subclass.name_code }}</td>
-                <td>{{ subclass.name_description }}</td>
-                <td>{{ subclass.created_by }}</td>
-                <td>{{ subclass.created_date }}</td>
-                <td>{{ subclass.modified_by }}</td>
-                <td>{{ subclass.modified_date }}</td>
-                <td>
-                    <form action="{% url 'admin_module:edit_subclass' subclass.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="edit-subclass">Edit</button>
-                    </form>
-                    <form action="{% url 'admin_module:delete_subclass' subclass.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-subclass">Delete</button>
-                    </form>
-                </td>
+                <th>Name code</th>
+                <th>Name description</th>
+                <th>Created by</th>
+                <th>Created Date</th>
+                <th>Modified By</th>
+                <th>Modified Date</th>
+                <th>Action</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-
-
+        </thead>
+        <tbody>
+            {% for subclass in subclass_data %}
+                <tr>
+                    <td>{{ subclass.name_code }}</td>
+                    <td>{{ subclass.name_description }}</td>
+                    <td>{{ subclass.created_by }}</td>
+                    <td>{{ subclass.created_date }}</td>
+                    <td>{{ subclass.modified_by }}</td>
+                    <td>{{ subclass.modified_date }}</td>
+                    <td>
+                        <form action="{% url 'admin_module:edit_subclass' subclass.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="edit-subclass">Edit</button>
+                        </form>
+                        <form action="{% url 'admin_module:delete_subclass' subclass.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-subclass">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

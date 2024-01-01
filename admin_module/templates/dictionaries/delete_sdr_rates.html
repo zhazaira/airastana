@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Removing the Sdr Rates</title>
+</head>
+<body>
+    <h1>Removing the Sdr Rates</h1>
+    <p>Are you sure you want to delete the sdr rates? "{{ sdr_rates.rate }}"?</p>
+    <form method="post" action="{% url 'admin_module:delete_sdr_rates' sdr_rates.id %}">
+        {% csrf_token %}
+        <input type="submit" value="Confirm deletion">
+    </form>
+</body>
+</html>

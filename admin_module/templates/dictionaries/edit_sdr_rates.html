@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Sdr Rates</title>
+</head>
+<body>
+    <h1>Edit Sdr Rates</h1>
+    <form method="post" action="{% url 'admin_module:edit_sdr_rates' sdr_rates.id %}">
+        {% csrf_token %}
+        <input type="text" name="city" value="{{ sdr_rates.city_1 }}">
+        <input type="text" name="city" value="{{ sdr_rates.city_2 }}">
+        <input type="text" name="rate" value="{{ sdr_rates.rate }}">
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>

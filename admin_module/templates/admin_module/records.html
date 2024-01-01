@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Records</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <h1>Records</h1>
+    
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Загрузить</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>GPACode</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Subclass</th>
+                <th>Flight1</th>
+                <th>FltDate</th>
+                <th>Wgt</th>
+                <th>Depeche</th>
+                <th>Group Date</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Modified By</th>
+                <th>Modified Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+                <tr>
+                    <td>{{ record.GPACode }}</td>
+                    <td>{{ record.Origin }}</td>
+                    <td>{{ record.Destination }}</td>
+                    <td>{{ record.Subclass }}</td>
+                    <td>{{ record.Flight1 }}</td>
+                    <td>{{ record.FltDate }}</td>
+                    <td>{{ record.Wgt }}</td>
+                    <td>{{ record.Depeche }}</td>
+                    <td>{{ record.GroupDate }}</td>
+                    <td>{{ record.created_by }}</td>
+                    <td>{{ record.created_date }}</td>
+                    <td>{{ record.modified_by }}</td>
+                    <td>{{ record.modified_date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

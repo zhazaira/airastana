@@ -1,0 +1,11 @@
+{% block content %}
+    <h2>Авторизация</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.username.label_tag }} {{ form.username }}
+        <br>
+        {{ form.password.label_tag }} {{ form.password }}
+        <br>
+        <button type="submit">Войти</button>
+    </form>
+{% endblock %}

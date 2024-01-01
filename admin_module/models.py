@@ -10,8 +10,8 @@ class UserProfile(models.Model):
         ('Senior', 'Senior'),
         ('User', 'User'),
     ])
-    status = models.BooleanField(default=True)  # Поле для статуса пользователя
-    password = models.CharField(max_length=255)  # Поле для хранения пароля
+    status = models.BooleanField(default=True)  
+    password = models.CharField(max_length=255)  
 
     def __str__(self):
         return self.user.username
@@ -31,6 +31,7 @@ class City(models.Model):
     class Meta:
         verbose_name = 'Город'
         verbose_name_plural = 'Города'
+
 
 class Currency(models.Model):
     code = models.CharField(max_length=10, verbose_name='Сокращенное название валюты', unique=True)
@@ -70,16 +71,16 @@ class GPACode(models.Model):
 class SdrRate(models.Model):
     city_1 = models.ForeignKey('City', on_delete=models.CASCADE, verbose_name='Город 1', related_name='sdr_rates_city_1')
     city_2 = models.ForeignKey('City', on_delete=models.CASCADE, verbose_name='Город 2', related_name='sdr_rates_city_2')
-    rate = models.DecimalField(max_digits=10, decimal_places=5, verbose_name='Тариф')
+    rate = models.FloatField(verbose_name='Тариф')
     date_begin = models.DateField(verbose_name='Дата начала')
     date_end = models.DateField(verbose_name='Дата окончания')
-    created_by = models.CharField(max_length=10, verbose_name='Логин, кем создана запись')
+    created_by = models.CharField(max_length=10, verbose_name='Логин, кем создана запись',blank=True)
     created_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    modified_by = models.CharField(max_length=10, verbose_name='Логин, вносивший изменение')
+    modified_by = models.CharField(max_length=10, verbose_name='Логин, вносивший изменение',blank=True)
     modified_date = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
     def __str__(self):
-        return f'{self.city_1} - {self.city_2} ({self.date_begin} - {self.date_end})'
+        return f'{self.city_1.city_name} - {self.city_2.city_name} ({self.date_begin} - {self.date_end})'
 
     class Meta:
         verbose_name = 'Тариф SDR'
@@ -94,10 +95,9 @@ class KZDRate(models.Model):
     rate_po = models.DecimalField(max_digits=10, decimal_places=5, verbose_name='Тариф PO')
     rate_nw = models.DecimalField(max_digits=10, decimal_places=5, verbose_name='Тариф NW')
     rate_ems = models.DecimalField(max_digits=10, decimal_places=5, verbose_name='Тариф EMS')
-    rate_eli = models.DecimalField(max_digits=10, decimal_places=5, verbose_name='Тариф ELI')
-    created_by = models.CharField(max_length=10, verbose_name='Логин, кем создана запись')
+    created_by = models.CharField(max_length=10, verbose_name='Логин, кем создана запись',blank=True)
     created_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    modified_by = models.CharField(max_length=10, verbose_name='Логин, вносивший изменение')
+    modified_by = models.CharField(max_length=10, verbose_name='Логин, вносивший изменение',blank=True)
     modified_date = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
     def __str__(self):
@@ -115,9 +115,9 @@ class OIRate(models.Model):
     rate = models.DecimalField(max_digits=10, decimal_places=5, verbose_name='Тариф')
     date_begin = models.DateField(verbose_name='Дата начала')
     date_end = models.DateField(verbose_name='Дата окончания')
-    created_by = models.CharField(max_length=10, verbose_name='Логин, кем создана запись')
+    created_by = models.CharField(max_length=10, verbose_name='Логин, кем создана запись',blank=True)
     created_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    modified_by = models.CharField(max_length=10, verbose_name='Логин, вносивший изменение')
+    modified_by = models.CharField(max_length=10, verbose_name='Логин, вносивший изменение',blank=True)
     modified_date = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
     def __str__(self):
@@ -176,3 +176,21 @@ class ExchangeRate(models.Model):
         verbose_name = 'Обменный курс'
         verbose_name_plural = 'Обменные курсы'
 
+
+
+
+
+class Records(models.Model):
+    GPACode = models.CharField(max_length=255)
+    Origin = models.CharField(max_length=255)
+    Destination = models.CharField(max_length=255)
+    Subclass = models.CharField(max_length=255)
+    Flight1 = models.CharField(max_length=255)
+    FltDate = models.DateField()
+    Wgt = models.FloatField()
+    Depeche = models.CharField(max_length=255)
+    GroupDate = models.DateField()
+    created_by = models.CharField(max_length=10, verbose_name='Логин, кем создана запись')
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    modified_by = models.CharField(max_length=10, verbose_name='Логин, вносивший изменение')
+    modified_date = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')

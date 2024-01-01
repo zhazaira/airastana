@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Commission</title>
+</head>
+<body>
+    <h1>Edit Commission</h1>
+    <form method="post" action="{% url 'admin_module:edit_commission' commission.id %}">
+        {% csrf_token %}
+        {{ form.gpa.label_tag }} {{ form.gpa }}
+        {{ form.value.label_tag}} {{ form.value}}
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>

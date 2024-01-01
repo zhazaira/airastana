@@ -8,7 +8,8 @@
     <p>Are you sure you want to delete the city? "{{ city.city_name }}"?</p>
     <form method="post" action="{% url 'admin_module:delete_city' city.id %}">
         {% csrf_token %}
-        <input type="submit" value="Confirm deletion">
+        <button type="submit">Confirm deletion</button>
+        <a href="{% url 'admin_module:cities' %}">Cancel</a>
     </form>
 </body>
 </html>
